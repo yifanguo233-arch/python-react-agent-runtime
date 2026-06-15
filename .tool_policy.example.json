@@ -1,0 +1,20 @@
+{
+  "tools": {
+    "run_terminal_command": {
+      "risk": "high",
+      "require_approval": true,
+      "deny_patterns": [
+        "\\brm\\s+-rf\\b",
+        "\\bgit\\s+reset\\s+--hard\\b"
+      ]
+    },
+    "write_to_file": {
+      "risk": "medium",
+      "require_approval": false,
+      "allowed_roots": [
+        "."
+      ]
+    }
+  }
+}
+

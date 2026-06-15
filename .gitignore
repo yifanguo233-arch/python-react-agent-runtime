@@ -1,0 +1,41 @@
+# 环境变量/API密钥（绝对不能上传！）
+.env
+.env
+.env.*
+
+# Python 缓存文件
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# 虚拟环境
+.venv/
+.venv_*/
+env/
+venv/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# RAG 向量库（本地数据，不上传）
+rag/chroma_db*/
+
+# Local generated/scratch files
+.codex_tmp/
+tmp/
+tmp_*/
+tmp*/
+tmp_big_read.txt
+
+# Agent local run artifacts
+.runs/
+.team/
+
+# Local legacy README backups
+README.legacy.md
+README-2.legacy.md

@@ -1,0 +1,23 @@
+[project]
+name = "agent"
+version = "0.1.0"
+description = "ReAct AI Agent"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "click>=8.2.1",
+    "mcp>=1.7.1",
+    "openai>=1.91.0",
+    "python-dotenv>=1.1.1",
+    "gradio>=4.0.0",
+    "requests>=2.33.1",
+    "ddgs>=9.13.0",
+    "zhipuai>=2.1.5.20250825",
+    "google-genai>=1.72.0",
+    "chromadb>=1.5.7",
+    "sentence-transformers>=5.4.0",
+    "python-docx>=1.1.2",
+    "pypdf>=5.1.0",
+]
+
+[tool.uv]
