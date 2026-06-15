@@ -21,8 +21,8 @@
 5. **Trace 与运行日志**  
    每次运行会写入 `.runs/*.log` 和 SQLite trace，记录 plan、thought、action、tool_result、tool_policy、evidence_ledger 和 final_answer，便于面试演示与问题复盘。
 
-6. **Memory / RAG / Multi-Agent 扩展能力**  
-   支持长期记忆、本地知识库查询、轻量子智能体和实验性多智能体队友机制，用于展示 Agent 工程化扩展方向。
+6. **Skills / Memory / RAG 扩展能力**  
+   支持技能按需加载、用户明确记忆落盘和本地知识库查询，用于展示 Agent Runtime 的能力扩展方式。
 
 ## 技术栈
 
@@ -74,12 +74,11 @@ flowchart TD
 | Tool Policy | `tool_policy.py` | 定义工具风险等级、危险命令阻断、人工确认和 allowed_roots 路径边界 |
 | Tool Layer | `tools.py` | 实现读文件、写文件、列目录、搜索、终端命令、联网搜索和知识库查询 |
 | Skill Registry | `skills.py` | 发现 skills、匹配关键词、按需加载 `SKILL.md` 正文 |
-| Memory Store | `memory.py` | 将长期记忆保存为 Markdown，并在任务开始时注入 prompt |
+| Memory Store | `memory.py` | 将用户明确要求保存的信息写入 Markdown，并在后续任务中作为轻量记忆注入 prompt |
 | MCP Client / Registry | `internal_mcp/` | 加载 MCP server，连接 stdio，会把 MCP tools 包装成本地工具 |
 | Repo Intel MCP Server | `internal_mcp/servers/repo_intel_server.py` | 提供符号查找、引用搜索、模块职责总结和变更影响面分析 |
 | RAG Pipeline | `rag/` | 解析 md/txt/docx/pdf，构建 chunk、embedding 和 ChromaDB 索引 |
 | Trace Store | `run_traces.py` | 使用 SQLite 保存结构化运行轨迹，并提供格式化报告 |
-| Team Manager | `team.py` | 实验性多 Agent 队友、消息总线、计划审批和 shutdown 协议 |
 
 ## 快速启动
 
@@ -151,7 +150,7 @@ AGENT_TRACE_DB=.runs/traces.sqlite3
 - 输出基于 observation 的项目分析
 - `.runs/` 中生成运行日志和 SQLite trace
 
-### CLI 示例 2：查看 MCP / Team 状态
+### CLI 示例 2：查看 MCP 状态
 
 ```text
 /status
@@ -162,7 +161,6 @@ AGENT_TRACE_DB=.runs/traces.sqlite3
 ```text
 # Agent Status
 - 模型后端：MiniMax API (...)
-- Multi-agent 支持：已启用
 
 # MCP Status
 - 已配置 server：1
@@ -207,7 +205,6 @@ uv run python scripts/run_tests.py
 - ReAct action / observation / final_answer 协议
 - 重复读取阻断和 evidence ledger
 - MCP config / registry / repo_intel server
-- Team 消息、计划审批和 shutdown 协议
 - SQLite trace 写入与查看
 
 ### 运行 Agent Eval Suite
@@ -251,7 +248,6 @@ Trace 报告会展示：
 
 - **不是完整 Web 服务**：当前入口是 CLI，没有提供 FastAPI / Web UI。
 - **不是生产级沙箱**：Tool Policy 和路径校验在 Agent 层工作，不等于 OS 级隔离。
-- **不是成熟多 Agent 调度平台**：Team 模块用于实验和演示，仍缺少复杂任务市场、并发控制和权限分层。
 - **不是大规模 RAG 产品**：RAG 适合本地文档查询，未接入重型 reranker、表格解析和多模态文档处理。
 - **模型后端当前收敛到 MiniMax**：运行时只允许 MiniMax 模型。
 - **Eval 是 scripted workflow eval**：能验证执行链路，不等同于大规模真实模型 benchmark。
@@ -262,12 +258,11 @@ Trace 报告会展示：
 2. 增加 Web API 或 UI，方便演示和集成。
 3. 强化沙箱执行能力，把高风险命令放进更严格的隔离环境。
 4. 改进 RAG 检索质量，引入更强 rerank、表格/PDF 结构解析和引用定位。
-5. 完善多 Agent 协作协议，增加任务分派、状态同步、权限分级和结果验收。
-6. 扩展真实 MCP server 生态，并为不同 server 增加独立 trust policy。
+5. 扩展真实 MCP server 生态，并为不同 server 增加独立 trust policy。
 
 ## 来源与声明
 
-本项目为学习和面试展示用途的工程化 Agent 原型，重点在于从代码层实现 ReAct、工具调用、Skills、MCP、Tool Policy、Trace、Memory、RAG 和 Multi-Agent 等机制。
+本项目为学习和面试展示用途的工程化 Agent 原型，重点在于从代码层实现 ReAct、工具调用、Skills、MCP、Tool Policy、Trace、Memory 和 RAG 等机制。
 
 项目参考了开源 Agent / ReAct / MCP / RAG 相关思想，并在本仓库中进行了手写实现和工程化改造。README 中描述的是当前代码已经实现或可运行演示的能力；未实现的能力已在“项目边界 / 后续优化”中明确说明。
 
