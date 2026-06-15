@@ -1,7 +1,7 @@
 [project]
-name = "agent"
+name = "python-react-agent-runtime"
 version = "0.1.0"
-description = "ReAct AI Agent"
+description = "A CLI-based ReAct Agent runtime with tool calling, policy control, trace logging, memory, and MCP integration."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
