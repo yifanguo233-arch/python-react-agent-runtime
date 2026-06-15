@@ -33,7 +33,6 @@
 - **知识库**：SentenceTransformers、ChromaDB、pypdf、python-docx
 - **可观测性**：SQLite Trace Store、结构化 run log
 - **测试与评估**：本地测试脚本、scripted eval suite
-- **当前未使用**：FastAPI、LangGraph、Redis、PostgreSQL、Docker Compose
 
 ## 系统架构 / 流程图
 
@@ -87,7 +86,8 @@ flowchart TD
 ### 1. 安装依赖
 
 ```powershell
-cd C:\my_project\Duan-Code-main
+git clone https://github.com/yifanguo233-arch/python-react-agent-runtime.git
+cd python-react-agent-runtime
 uv sync
 ```
 
@@ -99,14 +99,22 @@ uv sync
 
 ### 2. 配置环境变量
 
-在项目根目录创建 `.env`：
+复制示例环境变量文件：
+
+```powershell
+Copy-Item .env.example .env
+```
+
+然后编辑 `.env`：
 
 ```env
 MINIMAX_API_KEY=your_minimax_api_key
 MINIMAX_BASE_URL=https://api.minimaxi.com/v1
+AGENT_TRACE_DB=.runs/traces.sqlite3
 ```
 
 `MINIMAX_BASE_URL` 不填时默认使用 `https://api.minimaxi.com/v1`。
+`AGENT_TRACE_DB` 不填时默认写入项目本地 `.runs/traces.sqlite3`。
 
 ### 3. 启动 Agent
 
@@ -182,6 +190,14 @@ MINIMAX_BASE_URL=https://api.minimaxi.com/v1
 .\.venv\Scripts\python.exe scripts\run_tests.py
 ```
 
+也可以使用 uv 直接运行：
+
+```powershell
+uv run python scripts/run_tests.py
+```
+
+说明：当前仓库的测试入口是本地稳定测试脚本，逐个运行 `test/test_*.py` 文件；它不是依赖 pytest runner 的完整 pytest 工程。
+
 测试覆盖方向：
 
 - Memory 保存与注入
@@ -237,7 +253,7 @@ Trace 报告会展示：
 - **不是生产级沙箱**：Tool Policy 和路径校验在 Agent 层工作，不等于 OS 级隔离。
 - **不是成熟多 Agent 调度平台**：Team 模块用于实验和演示，仍缺少复杂任务市场、并发控制和权限分层。
 - **不是大规模 RAG 产品**：RAG 适合本地文档查询，未接入重型 reranker、表格解析和多模态文档处理。
-- **模型后端当前收敛到 MiniMax**：代码中保留部分历史依赖，但运行时只允许 MiniMax 模型。
+- **模型后端当前收敛到 MiniMax**：运行时只允许 MiniMax 模型。
 - **Eval 是 scripted workflow eval**：能验证执行链路，不等同于大规模真实模型 benchmark。
 
 后续优化方向：

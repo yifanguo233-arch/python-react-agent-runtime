@@ -47,7 +47,8 @@ class SubagentContext:
         for turn in range(self.max_turns):
             content = self.agent.dispatch_model(self.messages)
 
-            if self.agent._react_protocol_observation(self.messages, content):
+            protocol_checker = getattr(self.agent, "_react_protocol_observation", None)
+            if callable(protocol_checker) and protocol_checker(self.messages, content):
                 continue
 
             if "<final_answer>" in content:
@@ -326,17 +327,19 @@ class ReActAgent:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             path = os.path.join(self._run_log_dir(), f"{timestamp}_{self._run_log_slug(user_input)}.log")
             target_project = self._infer_target_project(user_input)
+            trace_db_path = getattr(self, "trace_db_path", None) or os.path.join(self._run_log_dir(), "traces.sqlite3")
+            self.trace_db_path = trace_db_path
             self.current_run_log_path = path
             with open(path, "w", encoding="utf-8") as f:
                 f.write("# Agent Run Log\n\n")
                 f.write(f"started_at: {datetime.now().isoformat(timespec='seconds')}\n")
                 f.write(f"runtime_project: {self.project_directory}\n")
                 f.write(f"target_project: {target_project or self.project_directory}\n")
-                f.write(f"trace_db: {self.trace_db_path}\n")
+                f.write(f"trace_db: {trace_db_path}\n")
                 f.write(f"model: {getattr(self, 'model', 'unknown')}\n\n")
                 f.write("## User Task\n")
                 f.write(f"{user_input}\n\n")
-            self.trace_store = TraceStore(self.trace_db_path)
+            self.trace_store = TraceStore(trace_db_path)
             self.trace_run_id = self.trace_store.start_run(
                 task=user_input,
                 project_directory=self.project_directory,
@@ -520,7 +523,7 @@ class ReActAgent:
             # 因为 Skill 正文已经给出执行流程，所以这里不再额外 plan。
             # 显式选择技能时，技能正文已经进入上下文，直接让 ReAct 根据说明执行。
             print("\n\n 已显式选择技能，跳过通用任务规划，按技能正文直接执行...")
-            result = self._react_loop(task_for_execution, context=session_ctx, tool_map=prompt_tool_map, max_rounds=60)
+            result = self._react_loop(task_for_execution, context=session_ctx, tool_map=prompt_tool_map, max_rounds=30)
             self.session_history.append({"task": original_task, "answer": result})
             return self._finish_run_log(result)
         if self._should_skip_planning(task_for_execution):

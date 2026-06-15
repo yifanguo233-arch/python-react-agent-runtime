@@ -21,16 +21,12 @@ dependencies = [
     { name = "chromadb" },
     { name = "click" },
     { name = "ddgs" },
-    { name = "google-genai" },
-    { name = "gradio" },
     { name = "mcp" },
     { name = "openai" },
     { name = "pypdf" },
     { name = "python-docx" },
     { name = "python-dotenv" },
-    { name = "requests" },
     { name = "sentence-transformers" },
-    { name = "zhipuai" },
 ]
 
 [package.metadata]
@@ -38,16 +34,12 @@ requires-dist = [
     { name = "chromadb", specifier = ">=1.5.7" },
     { name = "click", specifier = ">=8.2.1" },
     { name = "ddgs", specifier = ">=9.13.0" },
-    { name = "google-genai", specifier = ">=1.72.0" },
-    { name = "gradio", specifier = ">=4.0.0" },
     { name = "mcp", specifier = ">=1.7.1" },
     { name = "openai", specifier = ">=1.91.0" },
     { name = "pypdf", specifier = ">=5.1.0" },
     { name = "python-docx", specifier = ">=1.1.2" },
     { name = "python-dotenv", specifier = ">=1.1.1" },
-    { name = "requests", specifier = ">=2.33.1" },
     { name = "sentence-transformers", specifier = ">=5.4.0" },
-    { name = "zhipuai", specifier = ">=2.1.5.20250825" },
 ]
 
 [[package]]
